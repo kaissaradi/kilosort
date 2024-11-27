@@ -4,7 +4,7 @@ This guide will walk you through the steps required to set up and install the Vi
 
 ---
 
-## Final Steps Reminder
+## **Reminder***
 
 - **Every time you open a terminal, make sure to run:**
   
