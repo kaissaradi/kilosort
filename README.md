@@ -1,7 +1,3 @@
-Sure! Here’s the final version with your edits. I've added the "Final Steps" reminder at the top, removed the `import os` in Step 6, and ensured the username reminder is added in Step 7.
-
----
-
 # Vision Software Pipeline Installation Guide
 
 This guide will walk you through the steps required to set up and install the Vision Software Pipeline, ensuring all the necessary files, directories, and configurations are properly set up for smooth operation.
