@@ -84,7 +84,7 @@ Move the necessary configuration files to their specified locations:
 - **Move `custom_config.py` to the `config` folder within the `MEA` directory**:
 
   ```bash
-  mv path/to/custom_config.py ~/Documents/Development/MEA/src/analysis/config/
+  mv path/to/custom_config.py ~/Documents/
   ```
 
 ---
