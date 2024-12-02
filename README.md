@@ -150,6 +150,7 @@ conda --version
 ### 5. Run `path-setup.sh`
 
 Now that your Conda environment is active, run the `path-setup.sh` script to configure the necessary paths.
+before running this script, open the file using a text editor and update the paths to your data folder. 
 
 1. **Navigate to your home directory**:
    ```bash
