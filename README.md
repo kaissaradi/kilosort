@@ -25,7 +25,6 @@ Before starting the installation, ensure you have the following folders and file
 - **artificial-retina-software-pipeline**
 - **kilosort_convert_binary**
 - **MEA**
-- **vision-convert**
 
 ### Additional Files
 - **path-setup.sh**  
@@ -50,7 +49,6 @@ Then, place the required folders inside the `Development` directory:
 mv path/to/artificial-retina-software-pipeline ~/Documents/Development/
 mv path/to/kilosort_convert_binary ~/Documents/Development/
 mv path/to/MEA ~/Documents/Development/
-mv path/to/vision-convert ~/Documents/Development/
 ```
 
 The directory structure should look like this:
@@ -59,8 +57,7 @@ The directory structure should look like this:
 ~/Documents/Development/
   ├── artificial-retina-software-pipeline/
   ├── kilosort_convert_binary/
-  ├── MEA/
-  └── vision-convert/
+  └── MEA
 ```
 
 ---
