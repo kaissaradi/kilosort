@@ -1,7 +1,7 @@
 # Code Updates for `run_kilosort4.py`
 
-This document outlines the recent changes made to the `run_kilosort4.py` script, located in the `utilities` directory. 
-
+This document outlines the recent changes made to the `run_kilosort4.py` script.
+The `run_kilosort4.py` file is located in `~/Documents/Development/MEA/src/utilities`. 
 ---
 
 ## 1. Configure `run_kilosort4.py`
@@ -24,7 +24,7 @@ This change ensures that the configuration module can be located and imported su
 
 ## 2. Modify the `run_kilosort` Function Call
 
-The function call to `run_kilosort` has been updated to **remove the `kept_spikes` variable** from the returned values. The updated code is as follows:
+In the same file, the function call to `run_kilosort` has been updated to **remove the `kept_spikes` variable** from the returned values. The updated code is as follows:
 
 ```python
 ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate = \
