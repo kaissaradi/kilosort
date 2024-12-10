@@ -1,194 +1,135 @@
 # Vision Software Pipeline Installation Guide
 
-This guide will walk you through the steps required to set up and install the Vision Software Pipeline, ensuring all the necessary files, directories, and configurations are properly set up for smooth operation.
-
----
-
-## **Reminder***
-
-- **Every time you open a terminal, make sure to run:**
-  
-  ```bash
-  source ~/.bashrc
-  conda activate kilosort
-  ```
-
-- **Ensure that the username is correct when editing paths or scripts, particularly when setting paths in files like `run_kilosort4.py` and `kilosort_convert.sh`.**
-
----
+This guide walks you through setting up the Vision Software Pipeline, ensuring all necessary files, directories, and configurations are properly set up for smooth operation.
 
 ## Prerequisites
 
-Before starting the installation, ensure you have the following folders and files available:
+### System Requirements
+- CUDA Toolkit (11.0 or later)
+  ```bash
+  # Check CUDA installation
+  nvcc --version
+  
+  # If not installed (Ubuntu/Debian):
+  sudo apt update
+  sudo apt install nvidia-cuda-toolkit
+  
+  # For other operating systems, visit:
+  # https://developer.nvidia.com/cuda-downloads
+  ```
 
-### Required Folders
-- **artificial-retina-software-pipeline**
-- **kilosort_convert_binary**
-- **MEA**
+### Required Repositories
+- [MEA](https://github.com/mikemanookin/MEA) - Core MEA analysis tools
+- [npy-matlab](https://github.com/kwikteam/npy-matlab) - MATLAB-Python interface utilities
+- `kilosort_convert_binary` - Conversion utilities for Kilosort
+- `artificial-retina-software-pipeline` - Core pipeline tools
 
-### Additional Files
-- **path-setup.sh**  
-- **setup.sh**  
-- **custom_config.py**
+### Required Configuration Files
+These files should be obtained from their respective repositories:
+- `path-setup.sh` - Environment path configuration (place in `~/`)
+- `setup.sh` - Installation setup script (place in `~/`)
+- `custom_config.py` - Custom configuration settings (place in `~/Documents/`)
 
----
+### Required Directory Structure
+All repositories should be placed under `~/Documents/Development/`:
+```plaintext
+~/Documents/Development/
+├── artificial-retina-software-pipeline/
+├── kilosort_convert_binary/
+├── MEA/
+└── npy-matlab/
+
+~/Documents/
+└── custom_config.py
+```
 
 ## Installation Steps
 
 ### 1. Prepare the Required Folders
 
-Ensure the necessary folders are placed under the `~/Documents/Development/` directory. If the `Development` directory does not exist, create it:
-
+Create the Development directory if it doesn't exist:
 ```bash
 mkdir -p ~/Documents/Development
 ```
 
-Then, place the required folders inside the `Development` directory:
-
-```bash
-mv path/to/artificial-retina-software-pipeline ~/Documents/Development/
-mv path/to/kilosort_convert_binary ~/Documents/Development/
-mv path/to/MEA ~/Documents/Development/
-```
-
-The directory structure should look like this:
-
-```bash
-~/Documents/Development/
-  ├── artificial-retina-software-pipeline/
-  ├── kilosort_convert_binary/
-  └── MEA
-```
-
----
-
 ### 2. Move the Additional Files
 
-Move the necessary configuration files to their specified locations:
+Place the configuration files in their specified locations:
+```bash
+# Move setup files to home directory
+mv path/to/path-setup.sh ~/
+mv path/to/setup.sh ~/
 
-- **Move `path-setup.sh` to the home directory (`~/`)**:
-
-  ```bash
-  mv path/to/path-setup.sh ~/
-  ```
-
-- **Move `setup.sh` to the home directory (`~/`)**:
-
-  ```bash
-  mv path/to/setup.sh ~/
-  ```
-
-- **Move `custom_config.py` to the `config` folder within the `MEA` directory**:
-
-  ```bash
-  mv path/to/custom_config.py ~/Documents/
-  ```
-
----
+# Move custom config to Documents
+mv path/to/custom_config.py ~/Documents/
+```
 
 ### 3. Install Conda
 
-If Conda is not already installed, follow these steps to install it:
+If Conda is not already installed:
 
-#### Check if Conda is Installed:
-
-```bash
-conda --version
-```
-
-#### If Conda is not installed, install Miniconda:
-
-1. **Download Miniconda**:
-   - For Linux:
-     ```bash
-     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-     ```
-   - For MacOS:
-     ```bash
-     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O ~/miniconda.sh
-     ```
-
-2. **Install Miniconda**:
+1. **Check if Conda is installed**:
    ```bash
-   bash ~/miniconda.sh -b -p $HOME/miniconda
+   conda --version
    ```
 
-3. **Initialize Conda**:
+2. **If not installed, install Miniconda**:
    ```bash
+   # For Linux:
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+   # For MacOS:
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O ~/miniconda.sh
+   ```
+
+3. **Install and initialize**:
+   ```bash
+   bash ~/miniconda.sh -b -p $HOME/miniconda
    source ~/miniconda/bin/activate
    conda init
    ```
 
----
-
-### 4. Create the `kilosort` Conda Environment
-
-1. **Navigate to the `MEA/hyak/containers/` directory**:
-   
-   This path might vary depending on your current location in the terminal, but the general location is:
-
-   ```bash
-   cd ~/Documents/Development/MEA/hyak/containers/
-   ```
-
-2. **Install the Conda environment using the provided `kilosort.yml` file**:
-   
-   ```bash
-   conda env create -f kilosort.yml
-   ```
-
-3. **Activate the `kilosort` environment**:
-   
-   Once the environment is created, activate it with:
-
-   ```bash
-   conda activate kilosort
-   ```
-
----
-
-### 5. Run `path-setup.sh`
-
-Now that your Conda environment is active, run the `path-setup.sh` script to configure the necessary paths.
-before running this script, open the file using a text editor and update the paths to your data folder. 
+### 4. Create the Kilosort Environment
 
 1. **Navigate to your home directory**:
    ```bash
    cd ~
    ```
 
-2. **Run the `path-setup.sh` script**:
+2. **Run the setup script**:
+   ```bash
+   ./setup.sh
+   ```
+
+### 5. Configure Path Settings
+
+1. **Open path-setup.sh in your preferred text editor**:
+   ```bash
+   # Using nano:
+   nano ~/path-setup.sh
+
+   # Or using VS Code:
+   code ~/path-setup.sh
+   ```
+
+2. **Update the paths to match your system**:
+   ```bash
+   # Example paths that need to be updated:
+   TEMPORARY_SORT_PATH="/path/to/your/data/"
+   LITKE_PATH="/path/to/your/data/"
+   SORTED_SPIKE_PATH="/path/to/your/data/sorted"
+   KILOSORT_TTL_PATH="/path/to/your/data/sorted"
+   RAW_DATA_PATH="/path/to/your/data/raw"
+   ```
+
+3. **Save the file and run it**:
    ```bash
    ./path-setup.sh
    ```
 
-   After running the script, the output should display the paths set for the environment, for example:
+### 6. Configure run_kilosort4.py
 
-   ```bash
-   TEMPORARY_SORT_PATH = /media/kais/Kais/data/
-   LITKE_PATH = /media/kais/Kais/data/
-   SORTED_SPIKE_PATH = /media/kais/Kais/data/sorted
-   KILOSORT_TTL_PATH = /media/kais/Kais/data/sorted
-   RAW_DATA_PATH = /media/kais/Kais/data/raw
-   VISIONPATH = /home/kais/Documents/Development/MEA/src/Vision7_for_2015DAQ/Vision.jar
-   LAB_NAME = Field
-   ```
-
-   The output also includes Python paths to confirm correct configuration, such as:
-
-   ```bash
-   /home/kais/Documents/Development/kilosort_convert_binary
-   /home/kais/Documents/Development/artificial-retina-software-pipeline/utilities
-   /home/kais/Documents/Development/artificial-retina-software-pipeline/utilities/bin2py
-   /home/kais/Documents/Development/artificial-retina-software-pipeline/utilities/bin2py/cython_extensions
-   ```
-
----
-
-### 6. Configure `run_kilosort4.py`
-
-1. **Navigate to the `utilities` directory**:
-
+1. **Navigate to the utilities directory**:
+   
    The `run_kilosort4.py` file is located in `~/Documents/Development/MEA/src/utilities`. Open this file and ensure the following code is included before `import config as cfg`:
 
    ```python
@@ -201,9 +142,7 @@ before running this script, open the file using a text editor and update the pat
 
 2. **Ensure the username is correct** for paths and environment setup.
 
----
-
-### 7. Update `kilosort_convert.sh`
+### 7. Update kilosort_convert.sh
 
 1. **Ensure Conda Python is used**:
    
@@ -213,7 +152,7 @@ before running this script, open the file using a text editor and update the pat
    /home/kais/miniconda3/envs/kilosort/bin/python3
    ```
 
-2. **Update `kilosort_convert.sh`**:
+2. **Update kilosort_convert.sh**:
    
    Open `kilosort_convert.sh` and update line 135 to use the Python path returned by the `which python3` command. It should look like this:
 
@@ -221,19 +160,54 @@ before running this script, open the file using a text editor and update the pat
    /home/kais/miniconda3/envs/kilosort/bin/python3 convert_litke_to_kilosort.py $litke_bin_path $kilosort2_temp_path $dsname -w -k -d $kilosort2_temp_path $is_streaming_data $start_sample_flag $start_sample_num $end_sample_flag $end_sample_num
    ```
 
----
+## Important Reminders
 
-## Final Steps Reminder
+Every time you open a terminal:
+```bash
+source ~/.bashrc
+conda activate kilosort
+```
 
-- **Every time you open a terminal, make sure to run:**
-  
-  ```bash
-  source ~/.bashrc
-  conda activate kilosort
-  ```
+Ensure that the username is correct when editing paths or scripts, particularly when setting paths in files like `run_kilosort4.py` and `kilosort_convert.sh`.
 
-- **Ensure that the username is correct when editing paths or scripts, particularly when setting paths in files like `run_kilosort4.py` and `kilosort_convert.sh`.**
+## Usage
 
---- 
+1. **Navigate to the utilities directory**:
+   ```bash
+   cd ~/Documents/Development/MEA/src/utilities
+   ```
 
-With these steps complete, your Vision Software Pipeline should be fully set up and ready for use.
+2. **Basic Command Structure**:
+   ```bash
+   pipeline.sh <EXPERIMENT_DATE> <CHUNK_NAME> -f <DATA_FILES> -e <EI_FILES> -n <NOISE_FILES> -a <ARRAY_SPACING> -p <PROTOCOL>
+   ```
+
+### Examples
+
+#### Single File Processing
+```bash
+bash pipeline.sh 20240820A chunk10 -f "data010" -n "data010" -e "data010" -a 30 -s "4"
+```
+
+#### Multiple File Processing
+```bash
+bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "data000" -a 120 -p "SpatialNoise"
+```
+
+### Pipeline Parameters
+
+#### Required Arguments
+- `<EXPERIMENT_DATE>`: Recording date (e.g., `20240820A`)
+- `<CHUNK_NAME>`: Chunk identifier (e.g., `chunk1`)
+
+#### Optional Flags
+```plaintext
+-e, --ei_files      The EI files to use for deduplication
+-f, --chunk_files   The chunk files to process (can be space-separated for multiple files)
+-n, --noise_files   The noise files to use for RF calculation
+-a, --array_spacing The array spacing to use for RF calculation
+-c, --use_car       Use common average reference
+-p, --protocol      The protocol to use for RF calculation (e.g., 'SpatialNoise')
+-s, --sort_algorithms The sorting algorithms to use
+-t, --threads       The number of threads to use for processing
+```
