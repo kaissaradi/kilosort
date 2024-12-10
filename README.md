@@ -160,6 +160,16 @@ If Conda is not already installed:
    /home/kais/miniconda3/envs/kilosort/bin/python3 convert_litke_to_kilosort.py $litke_bin_path $kilosort2_temp_path $dsname -w -k -d $kilosort2_temp_path $is_streaming_data $start_sample_flag $start_sample_num $end_sample_flag $end_sample_num
    ```
 
+### 8. Install Kilosort 2.5
+
+Follow the detailed installation guide for Kilosort 2.5 here: [Kilosort 2.5 Installation Guide](https://github.com/kaissaradi/kilosort/blob/main/kilosort2.md)
+
+This guide includes:
+- Required MATLAB toolboxes
+- GPU compatibility check
+- CUDA configuration
+- Troubleshooting steps
+
 ## Important Reminders
 
 Every time you open a terminal:
