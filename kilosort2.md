@@ -77,13 +77,7 @@ If you encounter compiler errors, try these solutions:
    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 60 --slave /usr/bin/g++ g++ /usr/bin/g++-11
    ```
 
-2. **Alternative: Use Unsupported Compiler Flag**
-   ```matlab
-   mexcuda -largeArrayDims '/home/spikedetector3.cu' 'NVCCFLAGS=-allow-unsupported-compiler'
-   ```
-   Note: Using this flag may lead to compilation issues, use with caution.
-
-3. **Check MATLAB Configuration**
+2. **Check MATLAB Configuration**
    - Type `gpuDevice` to check versions used by MATLAB
    - On Windows, use `mex --setup` to list and select compatible compilers
 
