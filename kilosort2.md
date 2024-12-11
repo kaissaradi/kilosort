@@ -116,5 +116,6 @@ If you encounter compiler errors, try these solutions:
    - Line 329: Change path to `~/Documents/Development/kilosort2.5`
    - Line 331: Change path to `~/Documents/Development/kilosort2` (if installed)
    - Line 327: Change path to `~/Documents/Development/kilosort3` (if installed)
+   - Line 348: Change path to `~/Documents/Development/MEA/src/pipeline_utilities/kilosort/`
 
 Save the file after making all changes.
