@@ -108,8 +108,6 @@ else
 fi
 unset __conda_setup
 
-# Cargo environment
-. "$HOME/.cargo/env"
 
 # Custom environment variables
 export TEMPORARY_SORT_PATH=/media/kais/Kais/data/
