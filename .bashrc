@@ -95,37 +95,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Conda initialization
-__conda_setup="$('/home/kais/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/kais/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/kais/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/kais/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-
-
-# Custom environment variables
-export TEMPORARY_SORT_PATH=/media/kais/Kais/data/
-export LITKE_PATH=/media/kais/Kais/data/
-export SORTED_SPIKE_PATH=/media/kais/Kais/data/sorted
-export KILOSORT_TTL_PATH=/media/kais/Kais/data/sorted
-export RAW_DATA_PATH=/media/kais/Kais/data/raw
-export VISIONPATH=/home/kais/Documents/Development/MEA/src/Vision7_for_2015DAQ/Vision.jar
-export LAB_NAME=Field
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/kilosort_convert_binary
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/artificial-retina-software-pipeline/utilities
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/artificial-retina-software-pipeline/utilities/bin2py
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/artificial-retina-software-pipeline/utilities/bin2py/cython_extensions
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/artificial-retina-software-pipeline/utilities/visionwriter
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/artificial-retina-software-pipeline/utilities/visionwriter/cython_extensions
-export PYTHONPATH=$PYTHONPATH:~/Documents/Development/artificial-retina-software-pipeline/utilities/lib
-export PATH=$PATH:/usr/local/MATLAB/R2024b/bin
-export PYTHONPATH=$PYTHONPATH:~/miniconda3/envs/kilosort/lib/python3.9/site-packages
 
 # HSTR configuration - add this to ~/.bashrc
 alias hh=hstr                    # hh to be alias for hstr
