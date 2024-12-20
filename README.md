@@ -2,12 +2,13 @@
 
 This guide walks you through setting up the Vision Software Pipeline, ensuring all necessary files, directories, and configurations are properly set up for smooth operation.
 
+---
+
 ## Prerequisites
 
-### Conda setup
-For Conda installation, follow the official guide:
+### Conda Setup
+For Conda installation, follow the official guide:  
 [Miniconda Installation Instructions](https://docs.anaconda.com/miniconda/install/)
-
 
 ### Windows Setup (If Applicable)
 If you're using Windows, you'll need Windows Subsystem for Linux (WSL):
@@ -24,7 +25,7 @@ If you're using Windows, you'll need Windows Subsystem for Linux (WSL):
   # If not installed (Ubuntu/Debian):
   sudo apt update
   sudo apt install nvidia-cuda-toolkit
-  
+
   # For other operating systems, visit:
   # https://developer.nvidia.com/cuda-downloads
   ```
@@ -40,7 +41,7 @@ These files should be obtained from their respective repositories:
 - `.bashrc` - Optionally copy from GitHub repository
 - `path-setup.sh` - Environment path configuration (place in `~/`)
 - `setup.sh` - Installation setup script (place in `~/`)
-- `custom_config.py` - Custom configuration settings (place in data directory)
+- `custom_config.py` - Custom configuration settings (place in the data directory)
 
 Example `path-setup.sh` structure:
 ```bash
@@ -55,7 +56,7 @@ variables=(
     'export LAB_NAME=Field'
 )
 ```
-Note: Change username ('kais') in all paths to match your system.
+Note: Change the username (`kais`) in all paths to match your system.
 
 In `custom_config.py`, update line 3 to match your data path:
 ```python
@@ -79,10 +80,11 @@ All repositories should be placed under `~/Documents/Development/`:
 └── sorted/       # Auto-populated by scripts
 ```
 
+---
+
 ## Installation Steps
 
 ### 1. Prepare the Required Folders
-
 Create the Development directory if it doesn't exist:
 ```bash
 mkdir -p ~/Documents/Development
@@ -91,21 +93,44 @@ mkdir -p ~/Documents/Development
 ### 2. Copy Configuration Files
 
 1. Copy `.bashrc` from the repository:
-```bash
-cp path/to/repo/.bashrc ~/
-```
+   ```bash
+   cp path/to/repo/.bashrc ~/
+   ```
 
 2. Place other configuration files:
-```bash
-# Move setup files to home directory
-mv path/to/path-setup.sh ~/
-mv path/to/setup.sh ~/
+   ```bash
+   # Move setup files to home directory
+   mv path/to/path-setup.sh ~/ 
+   mv path/to/setup.sh ~/ 
 
-# Move custom config to data directory
-mv path/to/custom_config.py /path/to/your/data/
-```
+   # Move custom config to data directory
+   mv path/to/custom_config.py /path/to/your/data/
+   ```
 
-### 3. Create the Kilosort Environment
+### 3. Install Conda
+If Conda is not already installed:
+
+1. **Check if Conda is installed**:
+   ```bash
+   conda --version
+   ```
+
+2. **If not installed, install Miniconda**:
+   ```bash
+   # For Linux:
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+   # For MacOS:
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O ~/miniconda.sh
+   ```
+
+3. **Install and initialize**:
+   ```bash
+   bash ~/miniconda.sh -b -p $HOME/miniconda
+   source ~/miniconda/bin/activate
+   conda init
+   ```
+
+### 4. Create the Kilosort Environment
 
 1. **Navigate to your home directory**:
    ```bash
@@ -122,9 +147,9 @@ mv path/to/custom_config.py /path/to/your/data/
    sudo chmod +x setup.sh
    ```
 
-### 4. Configure Path Settings
+### 5. Configure Path Settings
 
-1. **Open path-setup.sh in your preferred text editor**:
+1. **Open `path-setup.sh` in your preferred text editor**:
    ```bash
    nano ~/path-setup.sh
    ```
@@ -142,8 +167,8 @@ mv path/to/custom_config.py /path/to/your/data/
        'export LAB_NAME=Field'
    )
    ```
-   Note: Change username ('kais') in all paths to match your system, and if putting the data folder in a different path change that as well.
 
+   Note: Change the username (`kais`) in all paths to match your system.
 
 3. **Save and run the file**:
    ```bash
@@ -154,6 +179,49 @@ mv path/to/custom_config.py /path/to/your/data/
    ```bash
    sudo chmod +x path-setup.sh
    ```
+
+### 6. Configure `run_kilosort4.py`
+
+1. **Navigate to the utilities directory**:
+   ```bash
+   cd ~/Documents/Development/MEA/src/utilities
+   ```
+
+2. **Modify the file to include the module path**:
+   Open `run_kilosort4.py` and ensure the following code is included before `import config as cfg`:
+   ```python
+   import sys
+   # Get the absolute path to the directory containing your module
+   module_path = os.path.expanduser('~/Documents/Development/MEA/src/analysis/config')
+   # Add the module path to sys.path
+   sys.path.append(module_path)
+   ```
+
+### 7. Update `kilosort_convert.sh`
+
+1. **Ensure Conda Python is used**:
+   Run `which python3` in your terminal while the `kilosort` environment is active to get the path to the correct Python version. For example, it may look like:
+   ```bash
+   /home/kais/miniconda3/envs/kilosort/bin/python3
+   ```
+
+2. **Update the Python path**:
+   Open `kilosort_convert.sh` and update line 135 to use the Python path returned by `which python3`. It should look like this:
+   ```bash
+   /home/kais/miniconda3/envs/kilosort/bin/python3 convert_litke_to_kilosort.py $litke_bin_path $kilosort2_temp_path $dsname -w -k -d $kilosort2_temp_path $is_streaming_data $start_sample_flag $start_sample_num $end_sample_flag $end_sample_num
+   ```
+
+### 8. Install Kilosort 2.5
+Follow the detailed installation guide for Kilosort 2.5 here:  
+[Kilosort 2.5 Installation Guide](https://github.com/kaissaradi/kilosort/blob/main/kilosort2.md)
+
+This guide includes:
+- Required MATLAB toolboxes
+- GPU compatibility check
+- CUDA configuration
+- Troubleshooting steps
+
+---
 
 ## Usage
 
