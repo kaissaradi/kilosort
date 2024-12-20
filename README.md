@@ -197,21 +197,7 @@ If Conda is not already installed:
    sys.path.append(module_path)
    ```
 
-### 7. Update `kilosort_convert.sh`
-
-1. **Ensure Conda Python is used**:
-   Run `which python3` in your terminal while the `kilosort` environment is active to get the path to the correct Python version. For example, it may look like:
-   ```bash
-   /home/kais/miniconda3/envs/kilosort/bin/python3
-   ```
-
-2. **Update the Python path**:
-   Open `kilosort_convert.sh` and update line 135 to use the Python path returned by `which python3`. It should look like this:
-   ```bash
-   /home/kais/miniconda3/envs/kilosort/bin/python3 convert_litke_to_kilosort.py $litke_bin_path $kilosort2_temp_path $dsname -w -k -d $kilosort2_temp_path $is_streaming_data $start_sample_flag $start_sample_num $end_sample_flag $end_sample_num
-   ```
-
-### 8. Install Kilosort 2.5
+### 7. Install Kilosort 2.5
 Follow the detailed installation guide for Kilosort 2.5 here:  
 [Kilosort 2.5 Installation Guide](https://github.com/kaissaradi/kilosort/blob/main/kilosort2.md)
 
@@ -224,6 +210,14 @@ This guide includes:
 ---
 
 ## Usage
+
+The files for running the kilosort pipline can be found by going to the utilities folder in the MEA repo:
+```bash
+cd ~\Documents\Development\MEA\src\utilities
+```
+and then running the pipeline.sh script. This file is also where you will want to look first when debugging. This script will set all the paths, parse the h5 files, converts the bin files if needed, then run kilosort 2.4 or 4 depending on the usage, and finally post-process and save the data.
+run_kilosort4.py will set all the parameters and then call the run_kilosort function from run_kilosort.py which can be found in: `~\miniconda3\envs\kilosort\lib\python3.9\site-packages\kilosort`. If using kilosort2.5, the run_kilosort2.5m file will be called isntead, setup for previous versions can be found here:
+[Kilosort 2.5 Installation Guide](https://github.com/kaissaradi/kilosort/blob/main/kilosort2.md)
 
 1. **Basic Command Structure**:
    ```bash
@@ -278,17 +272,45 @@ bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "
    ```
 
 4. **Path Configuration Issues**
+   common error will be `H5 file path/to/data/h5file.h5 not found. Cannot continue.`
+   
    - Check all paths in custom_config.py, and .bashrc
    - Ensure .bashrc is properly sourced by running:
-   - CHECK FOR TRAILING "/" AND ENSURE ALL TRAILING "/"'s MATCH THE TEMPLATE
    ```bash
    source ~/.bashrc
    ```
+   - CHECK FOR TRAILING OR MISSING "/" IN THE OUTPUT AND ENSURE ALL TRAILING "/"'s MATCH THE TEMPLATE
    
    ```bash
    cat ~/.bashrc
    ```
-   ensure that the bashrc has the necessary export lines with the correct paths, and has set the necessary PYTHONPATHs. The contents of the bashrc file should end these (unless you added anything after or installed conda after):
+6. **Kilosort Parameter Count Error**
+When you encounter:
+```
+TypeError: function takes 8 positional arguments but 9 were given
+```
+This occurs when using the development version of kilosort4 which exlcudes the kept_spikes parameter
+You can delete this parameter in line 185 of run_kilosort4.py found in `~\Documents\Development\MEA\src\utilities`
+Solution: Reinstall Kilosort with GUI support:
+```bash
+pip uninstall kilosort
+pip install kilosort[gui]
+```
+
+6. **Custom Config Module Not Found**
+When you encounter:
+```
+ModuleNotFoundError: No module named 'custom_config'
+```
+
+Solution: Ensure custom_config.py is in both:
+```bash
+~/Documents/
+~/Documents/Development/MEA/src/analysis/config
+```
+This redundancy can help prevent issues. Make sure both copies have your correct data path settings.
+
+  ensure that the bashrc has the necessary export lines with the correct paths, and has set the necessary PYTHONPATHs. The contents of the bashrc file should end these (unless you added anything after or installed conda after):
 
   ```
      # Paths for analysis pipeline.
@@ -312,7 +334,7 @@ bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "
   ```
    
 
-6. CUDA Device Memory Error
+7. CUDA Device Memory Error
 When you encounter this error:
 ```bash
 RuntimeError: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 2: out of memory
