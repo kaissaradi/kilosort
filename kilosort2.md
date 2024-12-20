@@ -10,7 +10,28 @@
      ```
 
 ## 2. Install Required MATLAB Toolboxes
-
+Download and install matlab from https://www.mathworks.com/help/install/ug/install-products-with-internet-connection.html
+First download and unzip the package:
+```bash
+unzip matlab_R2024b_Linux.zip -d ./matlab_R2024b_Linux
+cd ./matlab_R2024b_Linux
+```
+then to install:
+```bash
+xhost +SI:localuser:root
+sudo -H ./install
+xhost -SI:localuser:root
+```
+Check the following toolboxes during install: 
+   - Parallel Computing Toolbox
+   - Signal Processing Toolbox
+   - DSP System Toolbox
+once installed, you will have to add matlab to your path in order to start it wtith the command "matlab"
+you can do this by adding its path to your bashrc with the following commmand (ensure you change to the correct version of matlab you have installed, here I have R2024b installed):
+```bash
+echo 'export PATH=$PATH:/usr/local/MATLAB/R2024b/bin' >> ~/.bashrc
+```
+matlab can now be opened with the command `matlab` in your terminal. If you did not install the required toolboxes, use the following steps, otherwise skip to step 3:
 1. **Open Add-On Explorer in MATLAB**
    - Click on the "Home" tab in MATLAB
    - Click on "Add-Ons" button
