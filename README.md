@@ -4,6 +4,12 @@ This guide walks you through setting up the Vision Software Pipeline, ensuring a
 
 ## Prerequisites
 
+### Windows Setup (If Applicable)
+If you're using Windows, you'll need Windows Subsystem for Linux (WSL):
+1. Open PowerShell as Administrator and run: `wsl --install`
+2. Install Ubuntu 22.04 LTS from Microsoft Store
+3. For detailed setup: [Microsoft WSL Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install)
+
 ### System Requirements
 - CUDA Toolkit (11.0 or later)
   ```bash
@@ -26,9 +32,30 @@ This guide walks you through setting up the Vision Software Pipeline, ensuring a
 
 ### Required Configuration Files
 These files should be obtained from their respective repositories:
+- `.bashrc` - Optionally copy from GitHub repository
 - `path-setup.sh` - Environment path configuration (place in `~/`)
 - `setup.sh` - Installation setup script (place in `~/`)
-- `custom_config.py` - Custom configuration settings (place in `~/Documents/`)
+- `custom_config.py` - Custom configuration settings (place in data directory)
+
+Example `path-setup.sh` structure:
+```bash
+# Paths for analysis pipeline.
+variables=(
+    'export TEMPORARY_SORT_PATH=/media/kais/Kais/data/'
+    'export LITKE_PATH=/media/kais/Kais/data/'
+    'export SORTED_SPIKE_PATH=/media/kais/Kais/data/sorted'
+    'export KILOSORT_TTL_PATH=/media/kais/Kais/data/sorted'
+    'export RAW_DATA_PATH=/media/kais/Kais/data/raw'
+    'export VISIONPATH=/home/kais/Documents/Development/MEA/src/Vision7_for_2015DAQ/Vision.jar'
+    'export LAB_NAME=Field'
+)
+```
+Note: Change username ('kais') in all paths to match your system.
+
+In `custom_config.py`, update line 3 to match your data path:
+```python
+DATA_VOLUME = '/mnt/FieldLab/Array-data/'  # Change to match your data path
+```
 
 ### Required Directory Structure
 All repositories should be placed under `~/Documents/Development/`:
@@ -39,8 +66,12 @@ All repositories should be placed under `~/Documents/Development/`:
 ├── MEA/
 └── npy-matlab/
 
-~/Documents/
-└── custom_config.py
+/path/to/data/          # Create manually or copy structure from GitHub
+├── raw/           # Raw data in YYYYMMDD[A-Z] format
+├── metadata/      
+│   └── json/     
+├── h5/           # H5 files (same name as raw data folder)
+└── sorted/       # Auto-populated by scripts
 ```
 
 ## Installation Steps
@@ -52,41 +83,27 @@ Create the Development directory if it doesn't exist:
 mkdir -p ~/Documents/Development
 ```
 
-### 2. Move the Additional Files
+### 2. Copy Configuration Files
 
-Place the configuration files in their specified locations:
+1. Copy `.bashrc` from the repository:
+```bash
+cp path/to/repo/.bashrc ~/
+```
+
+2. Place other configuration files:
 ```bash
 # Move setup files to home directory
 mv path/to/path-setup.sh ~/
 mv path/to/setup.sh ~/
 
-# Move custom config to Documents
-mv path/to/custom_config.py ~/Documents/
+# Move custom config to data directory
+mv path/to/custom_config.py /path/to/your/data/
 ```
 
 ### 3. Install Conda
 
-If Conda is not already installed:
-
-1. **Check if Conda is installed**:
-   ```bash
-   conda --version
-   ```
-
-2. **If not installed, install Miniconda**:
-   ```bash
-   # For Linux:
-   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-   # For MacOS:
-   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O ~/miniconda.sh
-   ```
-
-3. **Install and initialize**:
-   ```bash
-   bash ~/miniconda.sh -b -p $HOME/miniconda
-   source ~/miniconda/bin/activate
-   conda init
-   ```
+For Conda installation, follow the official guide:
+[Miniconda Installation Instructions](https://docs.anaconda.com/miniconda/install/)
 
 ### 4. Create the Kilosort Environment
 
@@ -97,97 +114,50 @@ If Conda is not already installed:
 
 2. **Run the setup script**:
    ```bash
-   ./setup.sh
+   source setup.sh
+   ```
+
+   Note: If you get a permission error, make the script executable:
+   ```bash
+   chmod +x setup.sh
    ```
 
 ### 5. Configure Path Settings
 
 1. **Open path-setup.sh in your preferred text editor**:
    ```bash
-   # Using nano:
    nano ~/path-setup.sh
-
-   # Or using VS Code:
-   code ~/path-setup.sh
    ```
 
 2. **Update the paths to match your system**:
    ```bash
-   # Example paths that need to be updated:
-   TEMPORARY_SORT_PATH="/path/to/your/data/"
-   LITKE_PATH="/path/to/your/data/"
-   SORTED_SPIKE_PATH="/path/to/your/data/sorted"
-   KILOSORT_TTL_PATH="/path/to/your/data/sorted"
-   RAW_DATA_PATH="/path/to/your/data/raw"
+   # Paths for analysis pipeline.
+   variables=(
+       'export TEMPORARY_SORT_PATH=/media/kais/Kais/data/'
+       'export LITKE_PATH=/media/kais/Kais/data/'
+       'export SORTED_SPIKE_PATH=/media/kais/Kais/data/sorted'
+       'export KILOSORT_TTL_PATH=/media/kais/Kais/data/sorted'
+       'export RAW_DATA_PATH=/media/kais/Kais/data/raw'
+       'export VISIONPATH=/home/kais/Documents/Development/MEA/src/Vision7_for_2015DAQ/Vision.jar'
+       'export LAB_NAME=Field'
+   )
+   ```
+   Note: Change username ('kais') in all paths to match your system.
    ```
 
-3. **Save the file and run it**:
+3. **Save and run the file**:
    ```bash
    ./path-setup.sh
    ```
 
-### 6. Configure run_kilosort4.py
-
-1. **Navigate to the utilities directory**:
-   
-   The `run_kilosort4.py` file is located in `~/Documents/Development/MEA/src/utilities`. Open this file and ensure the following code is included before `import config as cfg`:
-
-   ```python
-   import sys
-   # Get the absolute path to the directory containing your module
-   module_path = os.path.expanduser('~/Documents/Development/MEA/src/analysis/config')
-   # Add the module path to sys.path
-   sys.path.append(module_path)
-   ```
-
-2. **Ensure the username is correct** for paths and environment setup.
-
-### 7. Update kilosort_convert.sh
-
-1. **Ensure Conda Python is used**:
-   
-   Run `which python3` in your terminal while the `kilosort` environment is active to get the path to the correct Python version. For example, it may look like:
-
+   Note: If you get a permission error:
    ```bash
-   /home/kais/miniconda3/envs/kilosort/bin/python3
+   chmod +x path-setup.sh
    ```
-
-2. **Update kilosort_convert.sh**:
-   
-   Open `kilosort_convert.sh` and update line 135 to use the Python path returned by the `which python3` command. It should look like this:
-
-   ```bash
-   /home/kais/miniconda3/envs/kilosort/bin/python3 convert_litke_to_kilosort.py $litke_bin_path $kilosort2_temp_path $dsname -w -k -d $kilosort2_temp_path $is_streaming_data $start_sample_flag $start_sample_num $end_sample_flag $end_sample_num
-   ```
-
-### 8. Install Kilosort 2.5
-
-Follow the detailed installation guide for Kilosort 2.5 here: [Kilosort 2.5 Installation Guide](https://github.com/kaissaradi/kilosort/blob/main/kilosort2.md)
-
-This guide includes:
-- Required MATLAB toolboxes
-- GPU compatibility check
-- CUDA configuration
-- Troubleshooting steps
-
-## Important Reminders
-
-Every time you open a terminal:
-```bash
-source ~/.bashrc
-conda activate kilosort
-```
-
-Ensure that the username is correct when editing paths or scripts, particularly when setting paths in files like `run_kilosort4.py` and `kilosort_convert.sh`.
 
 ## Usage
 
-1. **Navigate to the utilities directory**:
-   ```bash
-   cd ~/Documents/Development/MEA/src/utilities
-   ```
-
-2. **Basic Command Structure**:
+1. **Basic Command Structure**:
    ```bash
    pipeline.sh <EXPERIMENT_DATE> <CHUNK_NAME> -f <DATA_FILES> -e <EI_FILES> -n <NOISE_FILES> -a <ARRAY_SPACING> -p <PROTOCOL>
    ```
@@ -203,6 +173,53 @@ bash pipeline.sh 20240820A chunk10 -f "data010" -n "data010" -e "data010" -a 30 
 ```bash
 bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "data000" -a 120 -p "SpatialNoise"
 ```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Permission Denied Errors**
+   ```bash
+   -bash: ./script.sh: Permission denied
+   ```
+   Solution: Make the script executable
+   ```bash
+   chmod +x script.sh
+   ```
+
+2. **Conda Environment Not Found**
+   ```bash
+   conda: command not found
+   ```
+   Solution: Initialize conda or check installation
+   ```bash
+   source ~/miniconda3/bin/activate
+   conda init
+   ```
+
+3. **CUDA Not Found**
+   ```bash
+   nvcc: command not found
+   ```
+   Solution: Install CUDA toolkit or check PATH
+   ```bash
+   echo $PATH | grep cuda
+   ```
+
+4. **Path Configuration Issues**
+   - Check if all paths in custom_config.py exist
+   - Verify permissions on data directories
+   - Ensure .bashrc is properly sourced
+
+5. **Common File Permission Issues**
+   ```bash
+   mkdir: cannot create directory: Permission denied
+   ```
+   Solution: Check directory permissions or use sudo
+   ```bash
+   ls -la /path/to/directory
+   sudo chown -R $USER:$USER /path/to/directory
+   ```
 
 ### Pipeline Parameters
 
