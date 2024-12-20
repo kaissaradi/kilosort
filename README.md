@@ -4,6 +4,11 @@ This guide walks you through setting up the Vision Software Pipeline, ensuring a
 
 ## Prerequisites
 
+### Conda setup
+For Conda installation, follow the official guide:
+[Miniconda Installation Instructions](https://docs.anaconda.com/miniconda/install/)
+
+
 ### Windows Setup (If Applicable)
 If you're using Windows, you'll need Windows Subsystem for Linux (WSL):
 1. Open PowerShell as Administrator and run: `wsl --install`
@@ -100,12 +105,7 @@ mv path/to/setup.sh ~/
 mv path/to/custom_config.py /path/to/your/data/
 ```
 
-### 3. Install Conda
-
-For Conda installation, follow the official guide:
-[Miniconda Installation Instructions](https://docs.anaconda.com/miniconda/install/)
-
-### 4. Create the Kilosort Environment
+### 3. Create the Kilosort Environment
 
 1. **Navigate to your home directory**:
    ```bash
@@ -119,10 +119,10 @@ For Conda installation, follow the official guide:
 
    Note: If you get a permission error, make the script executable:
    ```bash
-   chmod +x setup.sh
+   sudo chmod +x setup.sh
    ```
 
-### 5. Configure Path Settings
+### 4. Configure Path Settings
 
 1. **Open path-setup.sh in your preferred text editor**:
    ```bash
@@ -142,8 +142,8 @@ For Conda installation, follow the official guide:
        'export LAB_NAME=Field'
    )
    ```
-   Note: Change username ('kais') in all paths to match your system.
-   ```
+   Note: Change username ('kais') in all paths to match your system, and if putting the data folder in a different path change that as well.
+
 
 3. **Save and run the file**:
    ```bash
@@ -152,7 +152,7 @@ For Conda installation, follow the official guide:
 
    Note: If you get a permission error:
    ```bash
-   chmod +x path-setup.sh
+   sudo chmod +x path-setup.sh
    ```
 
 ## Usage
@@ -184,14 +184,14 @@ bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "
    ```
    Solution: Make the script executable
    ```bash
-   chmod +x script.sh
+   sudo chmod +x script.sh
    ```
 
 2. **Conda Environment Not Found**
    ```bash
    conda: command not found
    ```
-   Solution: Initialize conda or check installation
+   Solution: Initialize conda or check installation, it may need to be reinstalled
    ```bash
    source ~/miniconda3/bin/activate
    conda init
@@ -205,21 +205,73 @@ bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "
    ```bash
    echo $PATH | grep cuda
    ```
+   ```bash
+   sudo apt install nvidia-cuda-toolkit
+   ```
 
 4. **Path Configuration Issues**
-   - Check if all paths in custom_config.py exist
-   - Verify permissions on data directories
-   - Ensure .bashrc is properly sourced
+   - Check all paths in custom_config.py, and .bashrc
+   - Ensure .bashrc is properly sourced by running:
+   - CHECK FOR TRAILING "/" AND ENSURE ALL TRAILING "/"'s MATCH THE TEMPLATE
+   ```bash
+   source ~/.bashrc
+   ```
+   
+   ```bash
+   cat ~/.bashrc
+   ```
+   ensure that the bashrc has the necessary export lines with the correct paths, and has set the necessary PYTHONPATHs. The contents of the bashrc file should end these (unless you added anything after or installed conda after):
 
-5. **Common File Permission Issues**
-   ```bash
-   mkdir: cannot create directory: Permission denied
-   ```
-   Solution: Check directory permissions or use sudo
-   ```bash
-   ls -la /path/to/directory
-   sudo chown -R $USER:$USER /path/to/directory
-   ```
+  ```
+     # Paths for analysis pipeline.
+  export TEMPORARY_SORT_PATH='/mnt/FieldLab/Array-data'
+  export LITKE_PATH='/mnt/FieldLab/Array-data/'
+  export SORTED_SPIKE_PATH='/mnt/FieldLab/Array-data/sorted'
+  export KILOSORT_TTL_PATH='/data/data/sorted'
+  export RAW_DATA_PATH='/mnt/FieldLab/Array-data/raw'
+  export VISIONPATH='/home/kais/Documents/Development/MEA/src/Vision7_for_2015DAQ/Vision.jar'
+  export LAB_NAME='Field' # Your lab name goes here.
+  export PYTHONPATH=$PYTHONPATH:/home/kais/miniconda3/bin/python3
+  export PATH=$PATH:/usr/local/MATLAB/R2024b/bin
+  export PYTHONPATH=$PYTHONPATH:/home/kais/anaconda3/envs/kilosort/bin/python3
+  export PYTHONPATH=$PYTHONPATH:/home/kais/kilosort_convert_binary
+  export PYTHONPATH=$PYTHONPATH:/home/kais/artificial-retina-software-pipeline/utilities
+  export PYTHONPATH=$PYTHONPATH:/home/kais/artificial-retina-software-pipeline/utilities/bin2py
+  export PYTHONPATH=$PYTHONPATH:/home/kais/artificial-retina-software-pipeline/utilities/bin2py/cython_extensions
+  export PYTHONPATH=$PYTHONPATH:/home/kais/artificial-retina-software-pipeline/utilities/visionwriter
+  export PYTHONPATH=$PYTHONPATH:/home/kais/artificial-retina-software-pipeline/utilities/visionwriter/cython_extensions
+  export PYTHONPATH=$PYTHONPATH:/home/kais/artificial-retina-software-pipeline/utilities/lib
+  ```
+   
+
+6. CUDA Device Memory Error
+When you encounter this error:
+```bash
+RuntimeError: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 2: out of memory
+```
+
+You can diagnose it by running:
+```bash
+python
+```
+then:
+```python
+import torch
+torch.cuda.init()
+```
+
+This is confirmed if torch.cuda.init() returns nothing or an error. This error seems to occur with multiple GPUs in WSL environment. The solution is to limit visible CUDA devices by running:
+```bash
+export CUDA_VISIBLE_DEVICES=0,1,2  # Use first three GPUs
+```
+Or
+```bash
+export CUDA_VISIBLE_DEVICES=0,1    # Use first two GPUs
+```
+OR
+```bash
+export CUDA_VISIBLE_DEVICES=0      # Use only first GPU
+```
 
 ### Pipeline Parameters
 
