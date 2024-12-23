@@ -362,6 +362,15 @@ OR
 ```bash
 export CUDA_VISIBLE_DEVICES=0      # Use only first GPU
 ```
+*NOTE* This command will have to run everytime you open a new shell, to keep this change add this line to bashrc in `~/.bashrc`
+
+8. 'Number of Channels' error:
+
+If you receive this error or similar: 
+![image](https://github.com/user-attachments/assets/84860cc6-7354-4d06-932c-759399b87cf2)
+
+Check the array spacing (can be 30 or 60 microns depending on the array used), also double check the number of channels is 512.
+
 
 ### Pipeline Parameters
 
