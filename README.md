@@ -375,8 +375,10 @@ Check the array spacing (can be 30 or 60 microns depending on the array used), a
 
 Kilosort4 is a particularly intensive operation, and large data sets can lead to errors with running out of GPU memory:
 
-**SHOW ERROR**
+<img width="924" alt="Capture" src="https://github.com/user-attachments/assets/e9c772d2-21d0-4139-a024-f5c1d1f569bf" />
 
+
+The main message you are looking for is: `RuntimeError: CUDA driver error: out of memory`
 to fix this, the best solution so far is to change the batch size in the call to run_kilosort4.py, found in line 246 and line 248 of pipline.sh in `~/Documents/Development/MEA/src/utilities`
 add the flag for batch size (-b), the default size is 60000, using 30000 or even 10000 for particularly large data sets will allow you to process them (keep in mind this does slow down the pipeline somewhat)
 this 
