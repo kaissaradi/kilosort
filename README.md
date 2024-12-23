@@ -371,6 +371,27 @@ If you receive this error or similar:
 
 Check the array spacing (can be 30 or 60 microns depending on the array used), also double check the number of channels is 512.
 
+9. GPU out of Memory
+
+Kilosort4 is a particularly intensive operation, and large data sets can lead to errors with running out of GPU memory:
+
+**SHOW ERROR**
+
+to fix this, the best solution so far is to change the batch size in the call to run_kilosort4.py, found in line 246 and line 248 of pipline.sh in `~/Documents/Development/MEA/src/utilities`
+add the flag for batch size (-b), the default size is 60000, using 30000 or even 10000 for particularly large data sets will allow you to process them (keep in mind this does slow down the pipeline somewhat)
+this 
+```python
+          python run_kilosort4.py ${EXP} ${CHUNK} -e ${ARRAY_SPACING} -c
+        else
+          python run_kilosort4.py ${EXP} ${CHUNK} -e ${ARRAY_SPACING}
+```
+should be changed to 
+```python
+          python run_kilosort4.py ${EXP} ${CHUNK} -e ${ARRAY_SPACING} -c -b 10000 # add the -b flag followed by batch size < 60000
+        else
+          python run_kilosort4.py ${EXP} ${CHUNK} -e ${ARRAY_SPACING} -b 10000 # add the -b flag followed by batch size < 60000
+```
+
 
 ### Pipeline Parameters
 
