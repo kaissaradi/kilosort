@@ -40,22 +40,17 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # Common aliases
-alias l='exa'
+alias l='ls'
 alias la='exa -a'
 alias ll='exa -la'
 alias mv='mv -i'
 alias rm='rm -i'
 alias cp='cp -i'
 alias ..='cd ..'
-alias vi='nvim -u ~/.SpaceVim/vimrc'
 alias gs='git status'
-alias python='python3'
 alias cl='clear'
 alias fd='fdfind'
 alias bat='batcat'
-alias code='/mnt/c/Users/kaoss/AppData/Local/Programs/Microsoft\ VS\ Code/Code.exe'
-alias ex='/mnt/c/Windows/explorer.exe .'
-alias gitdesk='/mnt/c/Users/kaoss/AppData/Local/GitHubDesktop/./GitHubDesktop.exe'
 
 # Alert alias for long running commands
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -80,7 +75,7 @@ export PATH
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='mvim'
+  export EDITOR='vim'
 fi
 
 # Edit line in vim with ctrl-e
