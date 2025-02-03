@@ -334,7 +334,7 @@ This redundancy can help prevent issues. Make sure both copies have your correct
   ```
    
 
-7. CUDA Device Memory Error
+7. **CUDA Device Memory Error**
 When you encounter this error:
 ```bash
 RuntimeError: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 2: out of memory
@@ -364,14 +364,14 @@ export CUDA_VISIBLE_DEVICES=0      # Use only first GPU
 ```
 *NOTE* This command will have to run everytime you open a new shell, to keep this change add this line to bashrc in `~/.bashrc`
 
-8. 'Number of Channels' error:
+8. **'Number of Channels' error:**
 
 If you receive this error or similar: 
 ![image](https://github.com/user-attachments/assets/84860cc6-7354-4d06-932c-759399b87cf2)
 
 Check the array spacing (can be 30 or 60 microns depending on the array used), also double check the number of channels is 512.
 
-9. GPU out of Memory
+9. **GPU out of Memory**
 
 Kilosort4 is a particularly intensive operation, and large data sets can lead to errors with running out of GPU memory:
 
@@ -394,6 +394,14 @@ should be changed to
           python run_kilosort4.py ${EXP} ${CHUNK} -e ${ARRAY_SPACING} -b 10000 # add the -b flag followed by batch size < 60000
 ```
 
+10. **No Header Tag** If you are receiving this error message:
+```bash
+File "/home/localadmin/Documents/Development/artificial-retina-software-pipeline/utilities/bin2py/bin2py.py", line 615, in construct_from_binfile
+  assert tag == HeaderTag.HEADER_LENGTH_TAG, 'No header tag'
+AssertionError: No header tag
+```
+And you copied the files from the Mac drive onto a external drive, there will be a hidden copy of each bin file, typically caused by macOS's handling of hidden files or metadata, with a (.) in front.
+As a result, the script will try to convert this (.)bin file which doesn't actually contain any raw data, just metadata. The solution is to right click and "show hidden files", then delete all of these (.)_ files and reprocess.
 
 ### Pipeline Parameters
 
