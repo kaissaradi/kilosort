@@ -9,7 +9,10 @@
 ## Running the Pipeline
 
 1. Open a terminal in one of these ways:
-   - Open a new terminal and type: `cd ~/Documents/Development/MEA-main/src/utilities/`
+   - Open a new terminal and type: 
+     ```bash
+     cd ~/Documents/Development/MEA-main/src/utilities/
+     ```
    - Or use `cd` and press the up arrow to find the command in history
    - Or navigate to the directory, right-click, and select "Open Terminal"
 
