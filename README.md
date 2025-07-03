@@ -259,6 +259,25 @@ bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -e "data000" -n "
    conda init
    ```
 
+2.5 **Pip install issues**
+   ```bash
+   # Build Error for `fastneurofilter`
+
+   ## Error Details
+    **RuntimeError**: Unsupported compiler -- at least C++11 support is needed!
+    
+    ### Output Summary
+    - **Note**: This error originates from a subprocess and is likely not a problem with pip.
+    - **ERROR**: Failed building wheel for `fastneurofilter`.
+    - **Action**: Ran `setup.py clean` for `fastneurofilter`.
+    - **Result**: Failed to build `fastneurofilter`.
+    - **Final Error**: Failed to build installable wheels for some `pyproject.toml`-based projects (`fastneurofilter`).
+   ```
+   Solution: install g++
+   ```bash
+   sudo apt install g++
+   ```
+
 3. **CUDA Not Found**
    ```bash
    nvcc: command not found
