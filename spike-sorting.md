@@ -1,4 +1,111 @@
-Here is the updated, comprehensive guide to the electrophysiology analysis pipeline.
+### 🧠 Guía del Pipeline de Análisis de Electrofisiología
+
+Este pipeline procesa datos crudos de electrofisiología combinando corridas experimentales, realizando clasificación de espigas (*spike sorting*) con Kilosort, y opcionalmente ejecutando análisis de post-procesamiento como el promedio disparado por espigas (*spike-triggered average* o STA) para determinar los campos receptivos.
+
+-----
+
+### 📂 Estructura de Archivos
+
+Antes de comenzar, tus datos deben estar organizados con la siguiente estructura. Los scripts dependen de variables de entorno (como `LITKE_PATH`) para encontrar estos directorios.
+
+```
+<LITKE_PATH>/
+├── h5/
+│   └── 20240926C.h5              # Archivo de metadatos del experimento
+│
+├── raw/
+│   └── 20240926C/                # Directorio para las corridas de datos crudos
+│       ├── data000/
+│       └── data001/
+│
+├── metadata/
+│   └── json/
+│       └── 20240926C.json        # Autogenerado desde el archivo .h5
+│
+└── sorted/
+    └── 20240926C/                # Ubicación de salida para todos los datos procesados
+```
+
+-----
+
+### 🚀 Flujos de Trabajo Principales
+
+Estas son las formas principales de usar el pipeline.
+
+#### 1\. Combinar Corridas de Datos Crudos
+
+Cada directorio de datos crudos (p. ej., `data000`) representa una única corrida de estímulo. Usa el script `prepare_data.sh` para fusionar múltiples corridas en un solo archivo `.bin` continuo para una clasificación de espigas combinada.
+
+**Cómo ejecutarlo:**
+Este comando combina `data005`, `data006` y `data010` en un solo bloque (*chunk*) llamado `chunk2`.
+
+```bash
+bash prepare_data.sh 20220531C chunk2 data005 data006 data010
+```
+
+-----
+
+#### 2\. Ejecutar Solo la Clasificación de Espigas (*Spike Sorting*)
+
+Si solo necesitas clasificar espigas y no necesitas calcular los campos receptivos, ejecuta el script principal `pipeline.sh`. La clave es **omitir la bandera `-n`**, que le indica al pipeline que se salte el paso de análisis STA. Aún debes especificar qué archivos clasificar usando la bandera `-f`.
+
+**Cómo ejecutarlo:**
+Esto clasifica un bloque (*chunk*) compuesto por `data000`, `data001` y `data002` sin realizar ningún análisis posterior.
+
+```bash
+bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -a 60
+```
+
+-----
+
+#### 3\. Ejecutar Análisis Completo (*Spike Sorting* + STA)
+
+Para realizar tanto la clasificación de espigas como el análisis de campos receptivos, **debes** especificar qué corrida de datos contiene el estímulo requerido (típicamente una grabación de ruido blanco). Usa la bandera `-n` para apuntar a este "archivo de ruido" (*noise file*).
+
+  * `-f <archivos>`: Define **todos** los archivos que se combinarán y clasificarán juntos.
+  * `-n <archivo_ruido>`: Define el archivo **específico** que se usará para el cálculo de STA.
+
+**Cómo ejecutarlo:**
+Este comando clasifica las espigas de tres corridas de datos y luego usa `data000` para calcular los campos receptivos.
+
+```bash
+bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -n "data000" -a 60
+```
+
+-----
+
+#### 4\. Ejecutar Solo el Análisis STA
+
+Si tus datos ya han sido clasificados (*spike-sorted*) y quieres ejecutar o re-ejecutar el análisis STA, usa el script `analyze_chunk.sh` directamente. Esto es útil para probar diferentes protocolos de análisis sin tener que volver a clasificar.
+
+**Cómo ejecutarlo:**
+Este comando ejecuta el análisis STA sobre los resultados existentes de `kilosort2.5` para `chunk1`, usando `data000` como la fuente de ruido. El `0.6` es el `CROP_FRACTION`, un parámetro determinado por el espaciado de la matriz de electrodos (*array*). Para usar un protocolo de análisis diferente, puedes establecer la variable de entorno `PROT` de antemano.
+
+```bash
+# Opcional: Establecer un protocolo diferente
+export PROT='AdaptNoiseColorSteps'
+
+# Ejecutar el análisis
+bash analyze_chunk.sh 20240926C chunk1 kilosort2.5 0.6 data000
+```
+
+-----
+
+### 🛠️ Opciones Completas del Pipeline
+
+El script `pipeline.sh` es el controlador principal y acepta varias opciones para personalizar el flujo de trabajo.
+
+| Bandera | Argumento | Descripción |
+| :--- | :--- | :--- |
+| `-f` | `<chunk_files>` | **(Requerido)** Los archivos de datos a combinar y clasificar. Puede ser una lista separada por espacios o un rango (p. ej., `"0-10,15"`). |
+| `-n` | `<noise_files>` | Archivos de datos a usar para el cálculo de campos receptivos (RF). Si se omite, este paso no se ejecuta. |
+| `-e` | `<ei_files>` | Archivos de datos usados para el cálculo de la imagen eléctrica (EI) y la deduplicación. |
+| `-a` | `<array_spacing>` | El espaciado de la matriz de electrodos en micrones (`30`, `60` o `120`). El valor por defecto es `60`. |
+| `-s` | `<sort_algorithms>` | Una lista separada por espacios de las versiones de Kilosort a ejecutar (p. ej., `"2.5 4"`). El valor por defecto es `"2.5"`. |
+| `-t` | `<threads>` | El número de hilos (threads) del CPU para el procesamiento. El valor por defecto es `8`. |
+| `-p` | `<protocol>` | El protocolo de análisis para el cálculo de RF. El valor por defecto es `SpatialNoise`. |
+| `-c` | | Una bandera para habilitar la referencia de promedio común (CAR). Deshabilitado por defecto. |
+| `-h` | | Muestra el mensaje de ayuda. |
 
 ### 🧠 Electrophysiology Analysis Pipeline Guide
 
