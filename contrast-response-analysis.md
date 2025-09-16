@@ -1,4 +1,74 @@
-Of course. Here is a simple guide to using the `.mat` file in MATLAB.
+
+### 🧠 Guía Sencilla de MATLAB
+
+Esta es una guía paso a paso para cargar tus datos y crear una gráfica en MATLAB.
+
+-----
+
+### ¿Qué Contiene el Archivo MAT?
+
+El archivo **`kilosort4_contrastResponse.mat`** es un archivo de datos de MATLAB que contiene los resultados de tu experimento. Dentro de él, las variables más importantes son:
+
+  * **`avg_response`**: La tasa de disparo promedio de cada neurona para cada condición de estímulo.
+  * **`cluster_id`**: Una lista de los números de ID únicos para tus neuronas.
+  * **`u_contrast`**: Una lista de los niveles de contraste específicos que se probaron (p. ej., 0.1, 0.2, 0.4).
+  * **`u_radius`**: Una lista de los diferentes tamaños de punto (*spot*) que se usaron.
+
+-----
+
+### Pasos para Graficar en MATLAB
+
+#### Paso 1: Abrir MATLAB y Cargar los Datos
+
+Primero, asegúrate de que el archivo `.mat` esté en la carpeta actual que MATLAB está usando.
+
+1.  **Encuentra la "Command Window"** (Ventana de Comandos). Aquí es donde escribirás los comandos.
+2.  **Escribe el siguiente comando** y presiona **Enter**. Esto carga tu archivo en una variable llamada `data`.
+
+<!-- end list -->
+
+```matlab
+data = load('kilosort4_contrastResponse.mat');
+```
+
+Después de ejecutar esto, verás la variable `data` en tu panel de "Workspace".
+
+-----
+
+#### Paso 2: Copiar y Pegar el Código para Graficar
+
+Ahora, copia el bloque de código completo de abajo y pégalo directamente en la **Command Window**. Presiona **Enter** para ejecutarlo. Este código creará la gráfica para la segunda neurona de tu conjunto de datos.
+
+```matlab
+% --- Código para Graficar la Función de Respuesta al Contraste ---
+
+% 1. Elige qué neurona analizar (1 es la primera, 2 la segunda, etc.)
+neuron_to_plot = 2;
+
+% 2. Extraer los datos que necesitamos del contenedor 'data' que cargamos
+contrast_levels = data.u_contrast;
+all_responses = data.avg_response;
+
+% 3. Obtener la curva de respuesta específica para la neurona elegida
+% Nota: Estamos seleccionando los datos para el primer radio y la primera frecuencia temporal
+neuron_response_curve = squeeze(all_responses(neuron_to_plot, :, 1, 1));
+
+% 4. Crear la gráfica
+figure; % Crea una nueva ventana para la figura
+plot(contrast_levels, neuron_response_curve, 'o-'); % Grafica los datos con marcadores y una línea
+
+% 5. Añadir etiquetas para que la gráfica sea clara
+xlabel('Nivel de Contraste');
+ylabel('Respuesta Promedio (espigas/s)');
+title(sprintf('Función de Respuesta al Contraste para Neurona %d', data.cluster_id(neuron_to_plot)));
+grid on; % Añade una cuadrícula para facilitar la lectura
+
+disp('✅ ¡Gráfica creada con éxito!');
+```
+
+Aparecerá una nueva ventana con tu gráfica. Puedes cambiar el número de `neuron_to_plot` en la primera línea del código para ver los resultados de otras neuronas.
+
+
 
 ### What the MAT File Contains
 
