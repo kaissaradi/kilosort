@@ -4,6 +4,8 @@ Este pipeline procesa datos crudos de electrofisiología combinando corridas exp
 
 -----
 
+
+
 ### 📂 Estructura de Archivos
 
 Antes de comenzar, tus datos deben estar organizados con la siguiente estructura. Los scripts dependen de variables de entorno (como `LITKE_PATH`) para encontrar estos directorios.
@@ -29,8 +31,10 @@ Antes de comenzar, tus datos deben estar organizados con la siguiente estructura
 -----
 
 ### 🚀 Flujos de Trabajo Principales
-
+Primero debes guardar los datos crudos del ordenador del rig (h5file y raw data) dentro de la carpeta 'data'. AHi encontraras dos subcarpetas h5 y raw donde deben ir ambos archivos.
 Estas son las formas principales de usar el pipeline.
+
+Depues debes abrir 'terminal'
 
 #### 1\. Combinar Corridas de Datos Crudos
 
@@ -69,7 +73,7 @@ Para realizar tanto la clasificación de espigas como el análisis de campos rec
 Este comando clasifica las espigas de tres corridas de datos y luego usa `data000` para calcular los campos receptivos.
 
 ```bash
-bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -n "data000" -a 60
+bash pipeline.sh 20240926C chunk1 -f "data000" -n "data000" e- "data000" -a 60
 ```
 
 -----
