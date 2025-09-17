@@ -44,7 +44,7 @@ Cada directorio de datos crudos (p. ej., `data000`) representa una única corrid
 Este comando combina `data005`, `data006` y `data010` en un solo bloque (*chunk*) llamado `chunk2`.
 
 ```bash
-bash prepare_data.sh 20220531C chunk2 data005 data006 data010
+bash prepare_data.sh 20220531C chunk2 data005 data006 data010 -s 4
 ```
 
 -----
@@ -57,13 +57,13 @@ Si solo necesitas clasificar espigas y no necesitas calcular los campos receptiv
 Esto clasifica un bloque (*chunk*) compuesto por `data000`, `data001` y `data002` sin realizar ningún análisis posterior.
 
 ```bash
-bash pipeline.sh 20240926C chunk1 -f "data000" -a 60
+bash pipeline.sh 20240926C chunk1 -f "data000" -a 60 -s 4
 ```
 
 -----
 
 #### 3\. Ejecutar Análisis Completo (*Spike Sorting* + STA)
-
+Asegurate siempre que el nombre de 'chunk' debe ser siempre un numero superior al de 'data'. Por ejemplo chunk1 debe ser data000. 
 Para realizar tanto la clasificación de espigas como el análisis de campos receptivos, **debes** especificar qué corrida de datos contiene el estímulo requerido (típicamente una grabación de ruido blanco). Usa la bandera `-n` para apuntar a este "archivo de ruido" (*noise file*).
 
   * `-f <archivos>`: Define **todos** los archivos que se combinarán y clasificarán juntos.
@@ -73,7 +73,7 @@ Para realizar tanto la clasificación de espigas como el análisis de campos rec
 Este comando clasifica las espigas de tres corridas de datos y luego usa `data000` para calcular los campos receptivos.
 
 ```bash
-bash pipeline.sh 20240926C chunk1 -f "data000" -n "data000" e- "data000" -a 60
+bash pipeline.sh 20240926C chunk1 -f "data000" -n "data000" e- "data000" -a 60 -s 4
 ```
 
 -----
@@ -90,7 +90,7 @@ Este comando ejecuta el análisis STA sobre los resultados existentes de `kiloso
 export PROT='AdaptNoiseColorSteps'
 
 # Ejecutar el análisis
-bash analyze_chunk.sh 20240926C chunk1 kilosort2.5 0.6 data000
+bash analyze_chunk.sh 20240926C chunk1 kilosort2.5 0.6 data000 -s 4
 ```
 
 -----
