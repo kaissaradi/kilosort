@@ -57,7 +57,7 @@ Si solo necesitas clasificar espigas y no necesitas calcular los campos receptiv
 Esto clasifica un bloque (*chunk*) compuesto por `data000`, `data001` y `data002` sin realizar ningún análisis posterior.
 
 ```bash
-bash pipeline.sh 20240926C chunk1 -f "data000 data001 data002" -a 60
+bash pipeline.sh 20240926C chunk1 -f "data000" -a 60
 ```
 
 -----
